@@ -36,15 +36,26 @@ public class Bar extends JComponent {
     
     public void setXval(int val){
         xval = val;
-        if(offset>0){
-            setSize(offset-xval-getHeight(),getHeight());
-            setLocation(xval+getHeight(), 0);
+//        if(offset>0){
+//            setSize(offset-xval-getHeight(),getHeight());
+//            setLocation(xval+getHeight(), 0);
+//        }  
+//        else {
+//            setSize(xval-getHeight(),getHeight());
+//        }
+        this.repaint();
+    }
+    
+    @Override
+     public void setBounds(int aX, int aY, int aWidth, int aHeight){
+         if(offset>0){
+            super.setBounds(xval+aHeight, 0, offset-xval-aHeight, aHeight);
         }  
         else {
-            setSize(xval-getHeight(),getHeight());
+            super.setBounds(0, 0, xval-aHeight, aHeight);
         }
-        this.invalidate();
-    }
+
+     }
     
      @Override
     public void paint(final Graphics g) {

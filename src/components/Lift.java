@@ -33,19 +33,30 @@ public class Lift extends JComponent {
     
     public void setX1val(int val){
          x1val= val;
-        setSize(x2val-x1val,getHeight());
-        setLocation(x1val,0);
-                this.invalidate();
+//        setSize(x2val-x1val,getHeight());
+//        setLocation(x1val,0);
+//                this.invalidate();
+
 
     }
     
      public void setX2val(int val){
          x2val= val;
-        setSize(x2val-x1val,getHeight());
-                this.invalidate();
+//        setSize(x2val-x1val,getHeight());
+//                this.invalidate();
+
 
     }
-    
+
+     @Override
+     public void setBounds(int aX, int aY, int aWidth, int aHeight){
+        
+            super.setBounds(x1val, 0, x2val-x1val, aHeight); 
+       
+
+     }
+     
+     
      @Override
     public void paint(final Graphics g) {
         Color color = Color.YELLOW;        
@@ -101,13 +112,11 @@ public class Lift extends JComponent {
         
         @Override
         public void mousePressed(final MouseEvent aE) {
-            System.out.println(aE);
             pressed = true;
             x0 = aE.getX();
         }
         @Override
         public void mouseReleased(final MouseEvent aE) {
-                        System.out.println(aE);
             pressed = false;
         }
         

@@ -21,7 +21,7 @@ public class JFrame1 extends javax.swing.JFrame {
      */
     public JFrame1() {
         initComponents();
-        model = new Model(300,0,100);
+        model = new Model(dSlider2.getWidth(),dSlider2.getHeight(),0,100,38,162);
         
         dSlider2.setUpPropertyListeners(model);
         
@@ -34,6 +34,11 @@ public class JFrame1 extends javax.swing.JFrame {
             System.out.println("sortie modèle");
             dSlider2.setX2val((int) evt.getNewValue());
         });
+        
+        model.onX1Change(40);
+        model.onX2Change(160);
+        dSlider2.repaint();
+
         
     }
 
@@ -65,30 +70,32 @@ public class JFrame1 extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(48, 48, 48)
-                        .addComponent(dSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jButton1)))
-                .addContainerGap(52, Short.MAX_VALUE))
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(66, 66, 66)
+                        .addComponent(dSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton1)
-                .addGap(88, 88, 88)
+                .addGap(40, 40, 40)
                 .addComponent(dSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(158, Short.MAX_VALUE))
+                .addContainerGap(206, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        dSlider2.setX1val(70);
-        dSlider2.setX2val(130);
-        dSlider2.invalidate();
+        model.onX1Change(39);
+        model.onX2Change(161);
+       // dSlider2.setX1val(40);
+       // dSlider2.setX2val(160);
+        dSlider2.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

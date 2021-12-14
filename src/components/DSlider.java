@@ -7,6 +7,7 @@ package components;
 
 import java.awt.Dimension;
 import javax.swing.JLayeredPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -37,8 +38,12 @@ public class DSlider extends JLayeredPane implements ChangeListener{
         this.add(barL);
         this.add(barR);
         
-        this.setX1val(40);
-        this.setX2val(90);
+        SwingUtilities.invokeLater(() -> {
+          //  this.setX1val(40);
+          //  this.setX2val(90);
+           // this.repaint();
+        });
+
         
     }
     
@@ -47,14 +52,19 @@ public class DSlider extends JLayeredPane implements ChangeListener{
         barL.setXval(val);
         arrowL.setXval(val);
         lift.setX1val(val);
-        this.invalidate();
+        //this.invalidate();
+        //this.setBounds(getLocation().x,getLocation().y,getWidth(),getHeight());
+        this.revalidate();
     }
     public void setX2val(int val){
         x2val = val;
         barR.setXval(val);
         arrowR.setXval(val);
         lift.setX2val(val);
-        this.invalidate();
+        //this.invalidate();
+        //this.setBounds(getLocation().x,getLocation().y,getWidth(),getHeight());
+        this.revalidate();
+
     }
     
     public void onX1change(int newval){
@@ -86,11 +96,12 @@ public class DSlider extends JLayeredPane implements ChangeListener{
     public void setBounds(int aX, int aY, int aWidth, int aHeight) {
         super.setBounds(aX, aY, aWidth, aHeight);
 
-        barR.setBounds(0, 0, aWidth, aHeight);
-        barL.setBounds(0, 0, aWidth, aHeight);
-        arrowL.setBounds(0, 0, aWidth, aHeight);
-        arrowR.setBounds(0, 0, aWidth, aHeight);
-        lift.setBounds(0, 0, aWidth, aHeight);
+        barR.setBounds(aX, aY, aWidth, aHeight);
+        barL.setBounds(aX, aY, aWidth, aHeight);
+        arrowL.setBounds(aX, aY, aWidth, aHeight);
+        arrowR.setBounds(aX, aY, aWidth, aHeight);
+        lift.setBounds(aX, aY, aWidth, aHeight);
+        System.out.println("setBounds done");
         
     }
     

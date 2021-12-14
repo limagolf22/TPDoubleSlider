@@ -14,6 +14,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputAdapter;
+import java.beans.Beans;
 
 /**
  *
@@ -44,15 +45,22 @@ public class Arrow extends JComponent {
     
      public void setXval(int val){
          xval = val;
-        if(!isRight){
-            setLocation(xval-getHeight(), 0);
-        }  
-        else {
-            setLocation(xval, 0);
-        }
-                this.invalidate();
+        
+                this.repaint();
 
     }
+     
+     @Override
+     public void setBounds(int aX, int aY, int aWidth, int aHeight){
+         if(!isRight){
+            super.setBounds(xval-aHeight, 0, aHeight, aHeight);
+        
+        }  
+        else {
+            super.setBounds(xval, 0, aHeight, aHeight);
+        }
+
+     }
     
      @Override
     public void paint(final Graphics g) {
@@ -136,13 +144,13 @@ public class Arrow extends JComponent {
         
         @Override
         public void mouseDragged(final MouseEvent aE) {
-            System.out.println(aE);
+            //System.out.println(aE);
             if(isRight){
-                System.out.println("valX1 fired "+xval+"    "+ ((int)aE.getX()-x0) );
+                //System.out.println("valX1 fired "+xval+"    "+ ((int)aE.getX()-x0) );
                 support.firePropertyChange("valX2",xval, xval+(int)aE.getX()-x0);
             }
             else {
-                            System.out.println("valX1 fired "+xval+"    "+ ((int)aE.getX()-x0) );
+                           // System.out.println("valX1 fired "+xval+"    "+ ((int)aE.getX()-x0) );
 
                 support.firePropertyChange("valX1",xval, xval+(int)aE.getX()-x0);
             }
