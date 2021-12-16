@@ -126,6 +126,8 @@ public class Lift extends JComponent {
             support.firePropertyChange("valX2",x2val, x2val+(int)aE.getX()-x0);
 
             support.firePropertyChange("valX1",x1val, x1val+(int)aE.getX()-x0);
+            
+            x0 = (int)aE.getX();
             }
     }
         
