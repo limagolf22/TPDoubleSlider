@@ -24,14 +24,16 @@ public class Arrow extends JComponent {
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private boolean isRight=false;
     private int xval;
+    private DSlider dslider;
     
     public Arrow(){
-        this(true,0);
+        this(true,0,null);
     }
     
-    public Arrow(boolean isright,int xval){
+    public Arrow(boolean isright,float xval,DSlider _dslider){
         super();
         isRight = isright;
+        dslider = _dslider;
         setXval(xval);
         ArrowMouseListener arml = new ArrowMouseListener();
         this.addMouseListener(arml);
@@ -43,21 +45,19 @@ public class Arrow extends JComponent {
         this.isRight = val;
     }
     
-     public void setXval(int val){
-         xval = val;
-        
-                this.repaint();
-
+    public void setXval(float val){
+        xval = convert2Pix(val);      
+        this.repaint();
     }
      
      @Override
      public void setBounds(int aX, int aY, int aWidth, int aHeight){
          if(!isRight){
-            super.setBounds(xval-aHeight, 0, aHeight, aHeight);
+            super.setBounds(xval-aHeight, aY, aHeight, aHeight);
         
         }  
         else {
-            super.setBounds(xval, 0, aHeight, aHeight);
+            super.setBounds(xval, aY, aHeight, aHeight);
         }
 
      }
@@ -121,6 +121,15 @@ public class Arrow extends JComponent {
         support.removePropertyChangeListener(aPropertyName, aListener);
     }
     
+    private float convert2Val(int xval){
+        return ((float)(xval-(float)dslider.getHeight()/2))/(dslider.getWidth()-dslider.getHeight())*(dslider.model.M-dslider.model.m)+dslider.model.m;
+    } 
+    
+    private int convert2Pix(float xval){
+        return (int) ((xval-dslider.model.m)/(dslider.model.M-dslider.model.m)*(dslider.getWidth()-dslider.getHeight())+(float)dslider.getHeight()/2);
+    } 
+    
+    
     private class ArrowMouseListener extends MouseInputAdapter {
         private int x0;
         private boolean pressed=false;
@@ -147,13 +156,14 @@ public class Arrow extends JComponent {
             //System.out.println(aE);
             if(isRight){
                 //System.out.println("valX1 fired "+xval+"    "+ ((int)aE.getX()-x0) );
-                support.firePropertyChange("valX2",xval, xval+(int)aE.getX()-x0);
+                support.firePropertyChange("valX2",convert2Val(xval),convert2Val(xval+aE.getX()-x0));
             }
             else {
                            // System.out.println("valX1 fired "+xval+"    "+ ((int)aE.getX()-x0) );
 
-                support.firePropertyChange("valX1",xval, xval+(int)aE.getX()-x0);
+                support.firePropertyChange("valX1",convert2Val(xval), convert2Val(xval+aE.getX()-x0));
             }
+           
         }
         
         

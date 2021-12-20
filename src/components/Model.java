@@ -17,30 +17,28 @@ import javax.swing.event.ChangeListener;
 public class Model implements ChangeListener {
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private int width,height;
-    private float m,M;
-    public int x1mod,x2mod;
+    public float m,M;
+    public float x1mod,x2mod;
 
-    public Model(int w,int h, float _m, float _M, int _x1, int _x2) {
-        width = w;
-        height = h;
+    public Model(float _m, float _M, int _x1, int _x2) {
         m = _m;
         M = _M;
         x1mod = _x1;
         x2mod = _x2;
     }
     
-    public void onX1Change(int newval){
-        int oldvalmod = x1mod;
-        x1mod = Math.max(height, Math.min(newval, x2mod));
-        System.out.println("sortie onX1change"+oldvalmod+"    "+x1mod);
+    public void onX1Change(float newval){
+        float oldvalmod = x1mod;
+        x1mod = Math.max(m, Math.min(newval, x2mod));
+        //System.out.println("sortie onX1change "+oldvalmod+"    "+x1mod);
 
         support.firePropertyChange("x1mod",oldvalmod,x1mod);
     }
     
-    public void onX2Change(int newval){
-        int oldvalmod = x2mod;
-        x2mod = Math.min(width-height, Math.max(newval, x1mod));
-        System.out.println("sortie onX2change"+oldvalmod+"    "+x2mod);
+    public void onX2Change(float newval){
+        float oldvalmod = x2mod;
+        x2mod = Math.min(M, Math.max(newval, x1mod));
+       // System.out.println("sortie onX2change "+oldvalmod+"    "+x2mod);
 
         support.firePropertyChange("x2mod",oldvalmod,x2mod);
     }
@@ -71,7 +69,5 @@ public class Model implements ChangeListener {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    private float convert2Val(int xval){
-        return xval/width*(M-m)+m;
-    } 
+   
 }

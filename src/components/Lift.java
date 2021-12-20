@@ -21,9 +21,11 @@ import javax.swing.event.MouseInputAdapter;
 public class Lift extends JComponent {
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private int x1val,x2val;
+    private DSlider dslider;
     
-    public Lift(int x1,int x2){
+    public Lift(float x1,float x2, DSlider _dslider){
         super();
+        dslider = _dslider;
         setX1val(x1);
         setX2val(x2);
         LiftMouseListener arml = new LiftMouseListener();
@@ -31,29 +33,17 @@ public class Lift extends JComponent {
         this.addMouseMotionListener(arml);
     }
     
-    public void setX1val(int val){
-         x1val= val;
-//        setSize(x2val-x1val,getHeight());
-//        setLocation(x1val,0);
-//                this.invalidate();
-
-
+    public void setX1val(float val){
+        x1val=convert2Pix(val);
     }
     
-     public void setX2val(int val){
-         x2val= val;
-//        setSize(x2val-x1val,getHeight());
-//                this.invalidate();
-
-
+     public void setX2val(float val){
+         x2val= convert2Pix(val);
     }
 
      @Override
-     public void setBounds(int aX, int aY, int aWidth, int aHeight){
-        
-            super.setBounds(x1val, 0, x2val-x1val, aHeight); 
-       
-
+     public void setBounds(int aX, int aY, int aWidth, int aHeight){      
+            super.setBounds(x1val, aY, x2val-x1val, aHeight); 
      }
      
      
@@ -101,6 +91,15 @@ public class Lift extends JComponent {
         support.removePropertyChangeListener(aPropertyName, aListener);
     }
     
+    private float convert2Val(int xval){
+        return ((float)(xval-(float)dslider.getHeight()/2))/(dslider.getWidth()-dslider.getHeight())*(dslider.model.M-dslider.model.m)+dslider.model.m;
+    } 
+    
+    private int convert2Pix(float xval){
+        return (int) ((xval-dslider.model.m)/(dslider.model.M-dslider.model.m)*(dslider.getWidth()-(float)dslider.getHeight())+(float)dslider.getHeight()/2);
+    } 
+    
+    
     private class LiftMouseListener extends MouseInputAdapter {
         private int x0;
         private boolean pressed=false;
@@ -113,7 +112,7 @@ public class Lift extends JComponent {
         @Override
         public void mousePressed(final MouseEvent aE) {
             pressed = true;
-            x0 = aE.getX();
+            x0 = aE.getXOnScreen();
         }
         @Override
         public void mouseReleased(final MouseEvent aE) {
@@ -123,12 +122,14 @@ public class Lift extends JComponent {
         @Override
         public void mouseDragged(final MouseEvent aE) {
             
-            support.firePropertyChange("valX2",x2val, x2val+(int)aE.getX()-x0);
+            support.firePropertyChange("valX2",convert2Val(x1val), convert2Val(x2val+aE.getXOnScreen()-x0));
 
-            support.firePropertyChange("valX1",x1val, x1val+(int)aE.getX()-x0);
+            support.firePropertyChange("valX1",convert2Val(x1val), convert2Val(x1val+aE.getXOnScreen()-x0));
             
-            x0 = (int)aE.getX();
-            }
+          
+            x0 = aE.getXOnScreen();
+            
+        }
     }
         
         

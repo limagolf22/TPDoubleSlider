@@ -21,38 +21,40 @@ import javax.swing.event.MouseInputAdapter;
 public class Bar extends JComponent {
     
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
-    private int xval,offset;
+    private boolean IsRight;
+    private int xval;
+    private DSlider dslider;
+    
     
     public Bar(){
-        this(0,0);
+        this(false,0,null);
     }
     
-    public Bar(int ofs,int xval){
+    public Bar(boolean isright ,float xval,DSlider _dslider){
         super();
-        offset = ofs;
+        IsRight = isright;
+        dslider = _dslider;
         setXval(xval);
         this.addMouseListener(new BarMouseListener());
+        System.out.println("dslider width "+dslider.getWidth());
     }
     
-    public void setXval(int val){
-        xval = val;
-//        if(offset>0){
-//            setSize(offset-xval-getHeight(),getHeight());
-//            setLocation(xval+getHeight(), 0);
-//        }  
-//        else {
-//            setSize(xval-getHeight(),getHeight());
-//        }
-        this.repaint();
+    public void setXval(float val){
+        xval = convert2Pix(val);
+        this.revalidate();
+        System.out.println("dslider width "+dslider.getWidth());
+
     }
     
     @Override
      public void setBounds(int aX, int aY, int aWidth, int aHeight){
-         if(offset>0){
-            super.setBounds(xval+aHeight, 0, offset-xval-aHeight, aHeight);
+        if(IsRight){
+            super.setBounds(xval+aHeight, aY, dslider.getWidth()-xval-aHeight, aHeight);
+                    System.out.println("dslider width "+dslider.getWidth());
+
         }  
         else {
-            super.setBounds(0, 0, xval-aHeight, aHeight);
+            super.setBounds(0, aY, xval-aHeight, aHeight);
         }
 
      }
@@ -96,17 +98,28 @@ public class Bar extends JComponent {
         support.removePropertyChangeListener(aPropertyName, aListener);
     }
     
+   private float convert2Val(int xval){
+        return ((float)(xval-(float)dslider.getHeight()/2))/(dslider.getWidth()-dslider.getHeight())*(dslider.model.M-dslider.model.m)+dslider.model.m;
+    } 
+    
+    private int convert2Pix(float xval){
+        return (int) ((xval-dslider.model.m)/(dslider.model.M-dslider.model.m)*(dslider.getWidth()-dslider.getHeight())+(float)dslider.getHeight()/2);
+    } 
+    
+    
+    
     private class BarMouseListener extends MouseInputAdapter {
 
         @Override
         public void mousePressed(final MouseEvent aE) {
-            System.out.println(aE);
-            if(offset>0){
-                support.firePropertyChange("valX2",xval, xval+(int)aE.getX());
+//            System.out.println(aE);
+            if(IsRight){
+                support.firePropertyChange("valX2",convert2Val(xval), convert2Val(xval+aE.getX()));
             }
             else {
-                support.firePropertyChange("valX1",xval, (int)aE.getX()+getHeight());
+                support.firePropertyChange("valX1",convert2Val(xval), convert2Val(aE.getX()+(int)dslider.getHeight()/2));
             }
+           
         }
 
     }
